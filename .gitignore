@@ -1,7 +1,5 @@
 debug
 .vscode/launch.json
-debug
-.vscode/launch.json
 vendor/gopkg.in/yaml.v2/emitterc.go
 vendor/vendor.json
 vendor/github.com/gin-contrib/sse/LICENSE
