@@ -41,3 +41,9 @@ type ReceiveFromList struct {
 	UserId    string `json:"uid" binding:"required"`
 	ProjectId string `json:"project_id" binding:"required"`
 }
+
+type ProjectBugRequest struct {
+	UserId      string   `json:"uid" binding:"required"`
+	ProjectId   string   `json:"project_id" binding:"required"`
+	DebuggerIds []string `json:"debugger_ids" binding:"required"`
+}
