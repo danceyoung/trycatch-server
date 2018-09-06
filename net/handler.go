@@ -83,10 +83,10 @@ func SaveProject(c *gin.Context) {
 }
 
 func Bugs(c *gin.Context) {
-	var upid model.ReceiveFromList
-	err := c.ShouldBindWith(&upid, binding.JSON)
+	var req model.ProjectBugRequest
+	err := c.ShouldBindWith(&req, binding.JSON)
 	if err == nil {
-		c.JSON(200, response.Bugs(upid))
+		c.JSON(200, response.Bugs(req))
 	}
 }
 
