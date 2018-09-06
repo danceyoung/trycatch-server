@@ -18,19 +18,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Bugs(upid model.ReceiveFromList) map[string]interface{} {
+func Bugs(req model.ProjectBugRequest) map[string]interface{} {
 	var response = make(map[string]interface{})
 
 	var rflSql = "select receive_from_list from tt_project_member where user_id=? and project_id=?"
 	var receivelist string
-	err := db.DB.QueryRow(rflSql, upid.UserId, upid.ProjectId).Scan(&receivelist)
+	err := db.DB.QueryRow(rflSql, req.UserId, req.ProjectId).Scan(&receivelist)
 	if err != nil {
 		panic(err.Error())
 	} else {
-		receivelist = " ('" + strings.Replace(receivelist, ",", "','", -1) + "') "
-		userids := "select user_id from tt_user where account_name in " + receivelist
-		rows, err := db.DB.Query("select tt_catch_info.user_id,tt_project_member.user_alias,catch_info from tt_catch_info,tt_project_member where tt_catch_info.user_id =tt_project_member.user_id and  tt_catch_info.project_id =tt_project_member.project_id and tt_catch_info.user_id in (" + userids + ") and tt_catch_info.project_id ='" + upid.ProjectId + "' limit 100")
-		fmt.Println("select tt_catch_info.user_id,tt_project_member.user_alias,catch_info from tt_catch_info,tt_project_member where tt_catch_info.user_id =tt_project_member.user_id and  tt_catch_info.project_id =tt_project_member.project_id and tt_catch_info.user_id in (" + userids + ") and tt_catch_info.project_id ='" + upid.ProjectId + "' limit 100")
+		userids := "'" + strings.Join(req.DebuggerIds, "','") + "'"
+		rows, err := db.DB.Query("select tt_catch_info.user_id,tt_project_member.user_alias,catch_info from tt_catch_info,tt_project_member where tt_catch_info.user_id =tt_project_member.user_id and  tt_catch_info.project_id =tt_project_member.project_id and tt_catch_info.user_id in (" + userids + ") and tt_catch_info.project_id ='" + req.ProjectId + "' limit 100")
+		fmt.Println("select tt_catch_info.user_id,tt_project_member.user_alias,catch_info from tt_catch_info,tt_project_member where tt_catch_info.user_id =tt_project_member.user_id and  tt_catch_info.project_id =tt_project_member.project_id and tt_catch_info.user_id in (" + userids + ") and tt_catch_info.project_id ='" + req.ProjectId + "' limit 100")
 		defer rows.Close()
 		if err != nil {
 			panic(err.Error())
