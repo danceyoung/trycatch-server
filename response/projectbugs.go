@@ -11,8 +11,10 @@ package response
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
+	"github.com/danceyoung/trycatchserver/constant"
 	"github.com/danceyoung/trycatchserver/db"
 	"github.com/danceyoung/trycatchserver/model"
 	"github.com/gin-gonic/gin"
@@ -28,8 +30,8 @@ func Bugs(req model.ProjectBugRequest) map[string]interface{} {
 		panic(err.Error())
 	} else {
 		userids := "'" + strings.Join(req.DebuggerIds, "','") + "'"
-		rows, err := db.DB.Query("select tt_catch_info.user_id,tt_project_member.user_alias,catch_info from tt_catch_info,tt_project_member where tt_catch_info.user_id =tt_project_member.user_id and  tt_catch_info.project_id =tt_project_member.project_id and tt_catch_info.user_id in (" + userids + ") and tt_catch_info.project_id ='" + req.ProjectId + "' limit 100")
-		fmt.Println("select tt_catch_info.user_id,tt_project_member.user_alias,catch_info from tt_catch_info,tt_project_member where tt_catch_info.user_id =tt_project_member.user_id and  tt_catch_info.project_id =tt_project_member.project_id and tt_catch_info.user_id in (" + userids + ") and tt_catch_info.project_id ='" + req.ProjectId + "' limit 100")
+		rows, err := db.DB.Query("select tt_catch_info.user_id,tt_project_member.user_alias,catch_info from tt_catch_info,tt_project_member where tt_catch_info.user_id =tt_project_member.user_id and  tt_catch_info.project_id =tt_project_member.project_id and tt_catch_info.user_id in (" + userids + ") and tt_catch_info.project_id ='" + req.ProjectId + "' limit " + strconv.Itoa((req.FetchPage-1)*constant.ItemsCountPerPage) + ", " + strconv.Itoa(constant.ItemsCountPerPage))
+		fmt.Println("select tt_catch_info.user_id,tt_project_member.user_alias,catch_info from tt_catch_info,tt_project_member where tt_catch_info.user_id =tt_project_member.user_id and  tt_catch_info.project_id =tt_project_member.project_id and tt_catch_info.user_id in (" + userids + ") and tt_catch_info.project_id ='" + req.ProjectId + "' limit " + strconv.Itoa((req.FetchPage-1)*constant.ItemsCountPerPage) + ", " + strconv.Itoa(constant.ItemsCountPerPage))
 		defer rows.Close()
 		if err != nil {
 			panic(err.Error())

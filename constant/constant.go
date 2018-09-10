@@ -15,6 +15,7 @@ const (
 	TtfJsonPrefix     = "{"
 	TtfJsonSuffix     = "}"
 	TtfJsonTokenSplit = "|"
+	ItemsCountPerPage = 10
 )
 
 const (

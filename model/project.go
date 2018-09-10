@@ -46,4 +46,5 @@ type ProjectBugRequest struct {
 	UserId      string   `json:"uid" binding:"required"`
 	ProjectId   string   `json:"project_id" binding:"required"`
 	DebuggerIds []string `json:"debugger_ids" binding:"required"`
+	FetchPage   int      `json:"fetch_page" binding:"required"`
 }
