@@ -27,7 +27,7 @@ type EditProject struct {
 	ProjectName   string       `json:"project_name" binding:"required"`
 	Language      string       `json:"language" binding:"required"`
 	Members       []EditMember `json:"members" binding:"required"`
-	DeleteMembers string       `json:"delete_members" binding:"required"`
+	DeleteMembers string       `json:"delete_members"`
 }
 
 type EditMember struct {
