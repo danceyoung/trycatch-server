@@ -36,6 +36,8 @@ func setupRouter() *gin.Engine {
 
 	user := r.Group("/user")
 	user.POST("/signin", net.Signin)
+	user.POST("/profile", net.Profile)
+	user.POST("/changepassword", net.ChangePassword)
 
 	project := r.Group("/project")
 	project.POST("/new", net.NewProject)
