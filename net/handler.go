@@ -4,7 +4,7 @@
  * @flow
  * @Date: 2018-06-28 15:12:45
  * @Last Modified by: Young
- * @Last Modified time: 2018-08-27 15:58:38
+ * @Last Modified time: 2018-10-26 15:01:10
  */
 package net
 
@@ -27,6 +27,24 @@ func Signin(c *gin.Context) {
 	err := c.ShouldBindWith(&user, binding.JSON)
 	if err == nil {
 		result := response.Signin(user.AccountName, user.Password)
+		c.JSON(200, result)
+	}
+}
+
+func Profile(c *gin.Context) {
+	var uid model.UID
+	err := c.ShouldBindWith(&uid, binding.JSON)
+	if err == nil {
+		result := response.Profile(uid.UserId)
+		c.JSON(200, result)
+	}
+}
+
+func ChangePassword(c *gin.Context) {
+	var cp model.ChangePassword
+	err := c.ShouldBindWith(&cp, binding.JSON)
+	if err == nil {
+		result := response.ChangePassword(cp.UserId, cp.Old, cp.New)
 		c.JSON(200, result)
 	}
 }
