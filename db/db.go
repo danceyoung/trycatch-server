@@ -11,13 +11,18 @@ package db
 import (
 	"database/sql"
 
+	"github.com/danceyoung/trycatchserver/constant"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var DB *sql.DB
 
 func init() {
-	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/try_catch")
+	var dataSourceName = "root:root@tcp(127.0.0.1:3306)/try_catch"
+	if constant.DEBUG == false {
+		dataSourceName = "root:Try1@@300@tcp(127.0.0.1:3306)/try_catch_db"
+	}
+	db, err := sql.Open("mysql", dataSourceName)
 	if err != nil {
 		panic("mysql init occurs error " + err.Error())
 	}
