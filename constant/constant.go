@@ -4,9 +4,11 @@
  * @flow
  * @Date: 2018-07-03 10:34:12
  * @Last Modified by: Young
- * @Last Modified time: 2018-08-27 15:55:14
+ * @Last Modified time: 2019-03-19 16:36:05
  */
 package constant
+
+const DEBUG = false
 
 const (
 	InitialPassword   = "123456"
