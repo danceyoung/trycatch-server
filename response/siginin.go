@@ -9,44 +9,49 @@
 package response
 
 import (
-	"database/sql"
-	"encoding/base64"
-
-	"github.com/danceyoung/trycatchserver/db"
+	"github.com/danceyoung/trycatchserver/model"
 	"github.com/gin-gonic/gin"
 )
 
 func Signin(username, password string) map[string]interface{} {
-	return prepareUser(username, password, true)
+	return SigninOrUp(username, password, true)
+}
+
+func SigninFromMobile(username, password string) map[string]interface{} {
+	return SigninOrUp(username, password, false)
+}
+
+func SigninOrUp(username, password string, inup bool) map[string]interface{} {
+	var response = make(map[string]interface{})
+
+	var user = model.User{UserName: username, Password: password}
+	var isExisted, userid, scanpassword = user.IsExisted()
+	if isExisted == false && inup == true {
+		tempUid := user.AddUser()
+		response["uid"] = tempUid
+		response["msg"] = gin.H{"code": 0, "content": "sign up successfully"}
+		return response
+	} else {
+		if scanpassword != password {
+			return gin.H{"msg": gin.H{"code": 2, "content": "The account and password are not matching"}}
+		} else {
+			response["uid"] = userid
+			response["msg"] = gin.H{"code": 0, "content": "sign in successfully"}
+			return response
+		}
+	}
 }
 
 func SaveProjectMember(username, password string) map[string]interface{} {
-	return prepareUser(username, password, false)
-}
-
-func prepareUser(username, password string, signFlag bool) map[string]interface{} {
-	var (
-		userid       string
-		scanpassword string
-	)
 	var response = make(map[string]interface{})
 
-	err := db.DB.QueryRow("select user_id, password from tt_user where account_name = ?", username).Scan(&userid, &scanpassword)
-	if err == sql.ErrNoRows {
-		base64uid := base64.RawURLEncoding.EncodeToString([]byte(username))
-		_, err := db.DB.Exec("insert into tt_user (`user_id`, `account_name`, `password`) values (?,?,?)", base64uid, username, password)
-
-		if err == nil {
-			response["uid"] = base64uid
-			response["msg"] = gin.H{"code": 0, "content": "sign up successfully"}
-			return response
-		} else {
-			panic(err.Error())
-		}
-	} else if scanpassword != password && signFlag {
-		return gin.H{"msg": gin.H{"code": 2, "content": "The account and password are not matching"}}
-	} else if err != nil {
-		panic(err.Error())
+	var user = model.User{UserName: username, Password: password}
+	var isExisted, userid, _ = user.IsExisted()
+	if isExisted == false {
+		tempUid := user.AddUser()
+		response["uid"] = tempUid
+		response["msg"] = gin.H{"code": 0, "content": "sign up successfully"}
+		return response
 	} else {
 		response["uid"] = userid
 		response["msg"] = gin.H{"code": 0, "content": "sign in successfully"}
