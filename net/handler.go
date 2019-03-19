@@ -4,7 +4,7 @@
  * @flow
  * @Date: 2018-06-28 15:12:45
  * @Last Modified by: Young
- * @Last Modified time: 2018-10-26 15:01:10
+ * @Last Modified time: 2019-03-19 15:40:33
  */
 package net
 
@@ -27,6 +27,15 @@ func Signin(c *gin.Context) {
 	err := c.ShouldBindWith(&user, binding.JSON)
 	if err == nil {
 		result := response.Signin(user.AccountName, user.Password)
+		c.JSON(200, result)
+	}
+}
+
+func SigninFromMobile(c *gin.Context) {
+	var user model.SigninUser
+	err := c.ShouldBindWith(&user, binding.JSON)
+	if err == nil {
+		result := response.SigninFromMobile(user.AccountName, user.Password)
 		c.JSON(200, result)
 	}
 }
@@ -136,5 +145,12 @@ func TryCatch(c *gin.Context) {
 		c.JSON(200, response.TryCatch(header, strings.Replace(reqbodystr, ttfJsonStr, "", -1)))
 		fmt.Println("diapering ttttoken is " + header.Ttftoken + " diapering content are " + string(reqbody))
 	}
+}
 
+func DeviceToken(c *gin.Context) {
+	var req model.DeviceToken
+	err := c.ShouldBindWith(&req, binding.JSON)
+	if err == nil {
+		c.JSON(200, response.CollectDeviceToken(req))
+	}
 }
