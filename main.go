@@ -6,9 +6,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/gin-contrib/cors"
-
+	"github.com/danceyoung/trycatchserver/constant"
 	"github.com/danceyoung/trycatchserver/net"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,6 +36,7 @@ func setupRouter() *gin.Engine {
 
 	user := r.Group("/user")
 	user.POST("/signin", net.Signin)
+	user.POST("/signinfrommobile", net.SigninFromMobile)
 	user.POST("/profile", net.Profile)
 	user.POST("/changepassword", net.ChangePassword)
 
@@ -50,6 +51,9 @@ func setupRouter() *gin.Engine {
 
 	diaper := r.Group("/try")
 	diaper.POST("/catchinfo", net.TryCatch)
+
+	apns := r.Group("/apns")
+	apns.POST("/devicetoken", net.DeviceToken)
 	// Get user value
 	// r.GET("/user/:name", func(c *gin.Context) {
 	// 	user := c.Params.ByName("name")
@@ -96,7 +100,12 @@ func setupLogger() {
 }
 
 func main() {
+	if constant.DEBUG == true {
+		fmt.Println("DEBUG Model")
+	}
+	// gin.SetMode(gin.ReleaseMode)
 	r := setupRouter()
 	// Listen and Server in 0.0.0.0:8080
 	r.Run(":8000")
+	// r.RunTLS(":8000", "/Users/young/young/Biz/TryCatch/keycer/server.pem", "/Users/young/young/Biz/TryCatch/keycer/server.key")
 }
