@@ -21,6 +21,4 @@ func Profile(userid string) map[string]interface{} {
 	} else {
 		return gin.H{"account_name": accountname, "msg": gin.H{"code": 0, "content": "profile"}}
 	}
-
-	return nil
 }
