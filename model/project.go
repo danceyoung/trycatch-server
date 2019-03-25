@@ -4,9 +4,15 @@
  * @flow
  * @Date: 2018-06-28 15:45:19
  * @Last Modified by: Young
- * @Last Modified time: 2018-07-26 10:27:18
+ * @Last Modified time: 2019-03-22 16:19:27
  */
 package model
+
+import (
+	"database/sql"
+
+	"github.com/danceyoung/trycatchserver/db"
+)
 
 type member struct {
 	Email           string `json:"email" binding:"required"`
@@ -47,4 +53,30 @@ type ProjectBugRequest struct {
 	ProjectId   string   `json:"project_id" binding:"required"`
 	DebuggerIds []string `json:"debugger_ids" binding:"required"`
 	FetchPage   int      `json:"fetch_page" binding:"required"`
+}
+
+func ProjectMemberAlias(uid string) string {
+	var aliasStr string
+	err := db.DB.QueryRow("SELECT user_alias FROM tt_project_member where user_id = ?", uid).Scan(&aliasStr)
+	switch {
+	case err == sql.ErrNoRows:
+		return ""
+	case err != nil:
+		panic(err.Error())
+	default:
+		return aliasStr
+	}
+}
+
+func ProjectName(projectId string) string {
+	var nameStr string
+	err := db.DB.QueryRow("SELECT project_name FROM tt_project where project_id = ?", projectId).Scan(&nameStr)
+	switch {
+	case err == sql.ErrNoRows:
+		return ""
+	case err != nil:
+		panic(err.Error())
+	default:
+		return nameStr
+	}
 }
