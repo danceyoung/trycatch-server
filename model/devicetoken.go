@@ -4,7 +4,7 @@
  * @flow
  * @Date: 2019-03-19 14:16:38
  * @Last Modified by: Young
- * @Last Modified time: 2019-03-19 15:15:08
+ * @Last Modified time: 2019-03-22 15:32:20
  */
 package model
 
@@ -37,4 +37,17 @@ func (dt DeviceToken) Checking() (new, modified bool) {
 		}
 	}
 	return
+}
+
+func DeviceTokenByUserId(uid string) string {
+	var tokenStr string
+	err := db.DB.QueryRow("select device_token from tt_device_token where user_id = ?", uid).Scan(&tokenStr)
+	switch {
+	case err == sql.ErrNoRows:
+		return ""
+	case err != nil:
+		panic(err.Error())
+	default:
+		return tokenStr
+	}
 }
