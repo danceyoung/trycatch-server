@@ -64,14 +64,19 @@ func TryCatch(header model.Header, info string) map[string]interface{} {
 			var debuger = model.ProjectMemberAlias(userid)
 			var projectName = model.ProjectName(projectid)
 			var title = debuger + " " + projectName
+
+			var deviceTokenObjects = model.DeviceTokenObjectsByUserIds(uidsArray)
+			deviceTokenObjects = checkDeviceTokenObjects(deviceTokenObjects)
+
 			var deviceTokens []string
-			for i := 0; i < len(uidsArray); i++ {
-				var userid = uidsArray[i]
-				var deviceToken = model.DeviceTokenByUserId(userid)
-				deviceTokens = append(deviceTokens, deviceToken)
+			var updateUids []string
+			for i := 0; i < len(deviceTokenObjects); i++ {
+				dto := deviceTokenObjects[i]
+				updateUids = append(updateUids, dto.UID)
+				deviceTokens = append(deviceTokens, dto.DeviceToken)
 			}
 			XgPush(deviceTokens, title, info)
-
+			model.UpdateXgPushState(updateUids)
 		} else {
 			panic(errIns.Error())
 		}
