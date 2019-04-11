@@ -4,7 +4,7 @@
  * @flow
  * @Date: 2018-06-28 15:45:19
  * @Last Modified by: Young
- * @Last Modified time: 2019-03-22 16:19:27
+ * @Last Modified time: 2019-04-03 15:08:18
  */
 package model
 
@@ -53,6 +53,12 @@ type ProjectBugRequest struct {
 	ProjectId   string   `json:"project_id" binding:"required"`
 	DebuggerIds []string `json:"debugger_ids" binding:"required"`
 	FetchPage   int      `json:"fetch_page" binding:"required"`
+}
+
+type ProjectBugsChartRequest struct {
+	UserId      string   `json:"uid" binding:"required"`
+	ProjectId   string   `json:"project_id" binding:"required"`
+	DebuggerIds []string `json:"debugger_ids" binding:"required" `
 }
 
 func ProjectMemberAlias(uid string) string {
