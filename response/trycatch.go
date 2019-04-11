@@ -4,7 +4,7 @@
  * @flow
  * @Date: 2018-08-08 09:38:15
  * @Last Modified by: Young
- * @Last Modified time: 2019-03-25 15:51:39
+ * @Last Modified time: 2019-04-03 09:35:34
  */
 package response
 
@@ -19,9 +19,9 @@ import (
 )
 
 func TryCatch(header model.Header, info string) map[string]interface{} {
-	var tokens = strings.Split(header.Ttftoken, constant.TtfJsonTokenSplit)
+	var tokens = strings.Split(header.TtfAccessToken, constant.TtfJsonTokenSplit)
 	if len(tokens) != 2 {
-		return nil
+		panic("ttf_access_token is not enough content.")
 	}
 	var userid = tokens[0]
 	var projectid = tokens[1]
@@ -31,13 +31,13 @@ func TryCatch(header model.Header, info string) map[string]interface{} {
 	 where tt_project.project_id=tt_project_member.project_id 
 	 and tt_project.project_id=? and user_id=?`, projectid, userid).Scan(&projectidvar)
 	if err != nil {
-		return nil
+		panic(err.Error())
 	}
 
-	stmt, err := db.DB.Prepare("insert into tt_catch_info (`user_id`,`project_id`,`catch_info`) values (?,?,?)")
+	stmt, err := db.DB.Prepare("insert into tt_catch_info (`user_id`,`project_id`,`catch_info`,`log_timestamp`) values (?,?,?,?)")
 	defer stmt.Close()
 	if err == nil {
-		_, errIns := stmt.Exec(userid, projectid, info)
+		_, errIns := stmt.Exec(userid, projectid, info, header.TtfLogTimestamp)
 		if errIns == nil {
 			var uidsArray []string
 			var currentAccountName string
@@ -76,7 +76,7 @@ func TryCatch(header model.Header, info string) map[string]interface{} {
 				deviceTokens = append(deviceTokens, dto.DeviceToken)
 			}
 			XgPush(deviceTokens, title, info)
-			model.UpdateXgPushState(updateUids)
+			// model.UpdateXgPushState(updateUids)
 		} else {
 			panic(errIns.Error())
 		}
