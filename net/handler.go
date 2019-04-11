@@ -4,7 +4,7 @@
  * @flow
  * @Date: 2018-06-28 15:12:45
  * @Last Modified by: Young
- * @Last Modified time: 2019-03-19 15:40:33
+ * @Last Modified time: 2019-04-03 15:10:55
  */
 package net
 
@@ -117,13 +117,21 @@ func Bugs(c *gin.Context) {
 	}
 }
 
+func BugsChart(c *gin.Context) {
+	var req model.ProjectBugsChartRequest
+	err := c.ShouldBindWith(&req, binding.JSON)
+	if err == nil {
+		c.JSON(200, response.BugsChartData(req.DebuggerIds, req.ProjectId))
+	}
+}
+
 func TryCatch(c *gin.Context) {
 	reqbody, _ := ioutil.ReadAll(c.Request.Body)
 
 	var reqbodystr = string(reqbody)
 	fmt.Println(reqbodystr)
 
-	var ttftokenIdx = strings.Index(reqbodystr, constant.TtfToken)
+	var ttftokenIdx = strings.Index(reqbodystr, constant.TtfAcessToken)
 	if ttftokenIdx == -1 {
 		return
 	}
@@ -134,7 +142,7 @@ func TryCatch(c *gin.Context) {
 	}
 	var ttfJsonStr = reqbodystr[startIdx : endIdx+1]
 	fmt.Println(ttfJsonStr)
-	if !strings.Contains(ttfJsonStr, constant.TtfToken) {
+	if !strings.Contains(ttfJsonStr, constant.TtfAcessToken) {
 		return
 	}
 
@@ -143,7 +151,7 @@ func TryCatch(c *gin.Context) {
 
 	if err == nil {
 		c.JSON(200, response.TryCatch(header, strings.Replace(reqbodystr, ttfJsonStr, "", -1)))
-		fmt.Println("diapering ttttoken is " + header.Ttftoken + " diapering content are " + string(reqbody))
+		fmt.Println("diapering ttttoken is " + header.TtfAccessToken + " diapering content are " + string(reqbody))
 	}
 }
 
@@ -153,4 +161,9 @@ func DeviceToken(c *gin.Context) {
 	if err == nil {
 		c.JSON(200, response.CollectDeviceToken(req))
 	}
+}
+
+func XgPushTest(c *gin.Context) {
+	// response.XgPush("cb5367ae2812c827421278dd6c112331d0f7f5f4c42e1d4edc6b3523258e0c46", "YoungDing >_ TestProject", "github.com/danceyoung/trycatchserver/netnet/handler.go:159:17: not enough arguments in call to response.XgPushhave ()want (string, string, string)")
+	c.JSON(200, "123")
 }
