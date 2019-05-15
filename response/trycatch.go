@@ -66,7 +66,7 @@ func TryCatch(header model.Header, info string) map[string]interface{} {
 			var title = debuger + " " + projectName
 
 			var deviceTokenObjects = model.DeviceTokenObjectsByUserIds(uidsArray)
-			deviceTokenObjects = checkDeviceTokenObjects(deviceTokenObjects)
+			// deviceTokenObjects = checkDeviceTokenObjects(deviceTokenObjects)
 
 			var deviceTokens []string
 			var updateUids []string
