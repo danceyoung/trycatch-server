@@ -47,13 +47,15 @@ func setupRouter() *gin.Engine {
 	project.POST("/detail", net.ProjectDetail)
 	project.POST("/list", net.Projects)
 	project.POST("/receivefromlist", net.ReceiveFromList)
-	project.POST("bugs", net.Bugs)
+	project.POST("/bugs", net.Bugs)
+	project.POST("/bugsChart", net.BugsChart)
 
 	diaper := r.Group("/try")
 	diaper.POST("/catchinfo", net.TryCatch)
 
 	apns := r.Group("/apns")
 	apns.POST("/devicetoken", net.DeviceToken)
+	apns.GET("/testpush", net.XgPushTest)
 	// Get user value
 	// r.GET("/user/:name", func(c *gin.Context) {
 	// 	user := c.Params.ByName("name")
