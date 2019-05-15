@@ -57,7 +57,7 @@ func DeviceTokenByUserId(uid string) string {
 
 func DeviceTokenObjectsByUserIds(uids []string) []DeviceToken {
 	var deviceTokenObjects []DeviceToken
-	var sql = "select user_id, account_name, device_token, last_push_date, push_times from tt_device_token where user_id in ("
+	var sql = "select user_id, account_name, device_token from tt_device_token where user_id in ("
 	for i := 0; i < len(uids); i++ {
 		sql = sql + "'" + uids[i] + "',"
 
@@ -71,7 +71,7 @@ func DeviceTokenObjectsByUserIds(uids []string) []DeviceToken {
 
 	for rows.Next() {
 		var dtobjc = DeviceToken{}
-		if err := rows.Scan(&dtobjc.UID, &dtobjc.AccountName, &dtobjc.DeviceToken, &dtobjc.LastPushDate, &dtobjc.PushTimes); err != nil {
+		if err := rows.Scan(&dtobjc.UID, &dtobjc.AccountName, &dtobjc.DeviceToken); err != nil {
 			panic(err.Error())
 		}
 		deviceTokenObjects = append(deviceTokenObjects, dtobjc)
