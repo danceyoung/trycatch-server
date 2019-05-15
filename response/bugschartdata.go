@@ -23,7 +23,7 @@ func BugsChartData(uids []string, projectId string) map[string]interface{} {
 	var querySql string
 	var uidsInSql = "'" + strings.Join(uids, "','") + "'"
 	for i := 24; i >= 1; i-- {
-		querySql = querySql + "  select count(*) as y_value from tt_catch_info where timestampdiff(hour, from_unixtime(log_timestamp/1000), now()) =" + strconv.Itoa(i) + "  and user_id in (" + uidsInSql + ") and project_id ='" + projectId + "'   union all"
+		querySql = querySql + "  select count(*) as y_value from tt_catch_info where TIMESTAMPDIFF(HOUR, DATE_FORMAT(FROM_UNIXTIME(log_timestamp/1000), '%y-%m-%d %H'), DATE_FORMAT(TIMESTAMPADD(HOUR, 1, NOW()), '%y-%m-%d %H')) =" + strconv.Itoa(i) + "  and user_id in (" + uidsInSql + ") and project_id ='" + projectId + "'   union all"
 	}
 	querySql = strings.TrimSuffix(querySql, "union all")
 	fmt.Println(querySql)
