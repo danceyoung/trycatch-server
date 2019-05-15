@@ -40,9 +40,9 @@ func Projects(uid string) map[string]interface{} {
 
 	var projectArray []interface{}
 
-	var creatorProjectsSql = "SELECT project_id, project_name, language, created_by,create_date,(select count(*) as members from tt_project_member where project_id = tt_project.project_id ) as members FROM tt_project where created_by=?"
+	var creatorProjectsSql = "SELECT project_id, project_name, language, created_by,create_date,(select count(*) as members from tt_project_member where project_id = tt_project.project_id ) as members FROM tt_project where created_by=? order by create_date desc"
 	projectArray = append(projectArray, createProjectArray(creatorProjectsSql, uid, 0)...)
-	var referProjectsSql = "SELECT project_id, project_name, language, created_by,create_date,(select count(*) as members from tt_project_member where project_id = tt_project.project_id ) as members FROM tt_project where project_id in (?)"
+	var referProjectsSql = "SELECT project_id, project_name, language, created_by,create_date,(select count(*) as members from tt_project_member where project_id = tt_project.project_id ) as members FROM tt_project where project_id in (?) order by create_date desc"
 	referProjectsSql = strings.Replace(referProjectsSql, "?", pids, -1)
 	// // fmt.Println(referProjectsSql)
 	projectArray = append(projectArray, createProjectArray(referProjectsSql, "", 1)...)
