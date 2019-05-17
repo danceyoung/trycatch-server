@@ -56,6 +56,9 @@ func setupRouter() *gin.Engine {
 	apns := r.Group("/apns")
 	apns.POST("/devicetoken", net.DeviceToken)
 	apns.GET("/testpush", net.XgPushTest)
+
+	privacy := r.Group("/privacy")
+	privacy.GET("/mobile", net.MobilePrivacy)
 	// Get user value
 	// r.GET("/user/:name", func(c *gin.Context) {
 	// 	user := c.Params.ByName("name")
