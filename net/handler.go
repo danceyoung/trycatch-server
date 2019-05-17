@@ -4,7 +4,7 @@
  * @flow
  * @Date: 2018-06-28 15:12:45
  * @Last Modified by: Young
- * @Last Modified time: 2019-04-03 15:10:55
+ * @Last Modified time: 2019-05-17 10:38:54
  */
 package net
 
@@ -166,4 +166,9 @@ func DeviceToken(c *gin.Context) {
 func XgPushTest(c *gin.Context) {
 	// response.XgPush("cb5367ae2812c827421278dd6c112331d0f7f5f4c42e1d4edc6b3523258e0c46", "YoungDing >_ TestProject", "github.com/danceyoung/trycatchserver/netnet/handler.go:159:17: not enough arguments in call to response.XgPushhave ()want (string, string, string)")
 	c.JSON(200, "123")
+}
+
+func MobilePrivacy(c *gin.Context) {
+	c.Header("Content-Type", "text/html; charset=utf-8")
+	c.String(200, response.MobilePrivacyContent())
 }
