@@ -34,7 +34,8 @@ func pushDebug(deviceTokens []string, title, content string) {
 	pushReq, _ := req.NewPushReq(
 		&xinge.Request{},
 		req.Platform(xinge.PlatformiOS),
-		req.EnvDev(),
+		// req.EnvDev(),
+		req.EnvProd(),
 		req.AudienceType(xinge.AdTokenList),
 		req.MessageType(xinge.MsgTypeNotify),
 		req.TokenList(deviceTokens),
