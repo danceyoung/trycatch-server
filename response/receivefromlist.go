@@ -9,6 +9,7 @@
 package response
 
 import (
+	"database/sql"
 	"strings"
 
 	"github.com/danceyoung/trycatchserver/db"
@@ -20,6 +21,7 @@ func ReceiveFromList(uid, projectid string) map[string]interface{} {
 	var accountsSql = "select receive_from_list from tt_project_member where project_id = ? and user_id=?"
 	var accounts string
 	accountsErr := db.DB.QueryRow(accountsSql, projectid, uid).Scan(&accounts)
+
 	if accountsErr == nil {
 		var inArgs = "'" + strings.Replace(accounts, ",", "','", -1) + "'"
 		var receiveFromListSql = "SELECT tt_user.user_id,tt_user.account_name,tt_project_member.user_alias FROM tt_user,tt_project_member WHERE account_name IN (" + inArgs + ") AND tt_user.user_id = tt_project_member.user_id AND tt_project_member.project_id =?"
@@ -52,6 +54,8 @@ func ReceiveFromList(uid, projectid string) map[string]interface{} {
 			panic(errP.Error())
 		}
 
+	} else if accountsErr == sql.ErrNoRows {
+		response["msg"] = gin.H{"code": 20, "content": "You aren't a member in project, so there is no any data."}
 	} else {
 		panic(accountsErr.Error())
 	}
