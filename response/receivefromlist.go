@@ -55,7 +55,8 @@ func ReceiveFromList(uid, projectid string) map[string]interface{} {
 		}
 
 	} else if accountsErr == sql.ErrNoRows {
-		response["msg"] = gin.H{"code": 20, "content": "You aren't a member in project, so there is no any data."}
+		response["receive_from_list"] = []interface{}{}
+		response["msg"] = gin.H{"code": 0, "content": "You aren't a member in project, so there is no any data."}
 	} else {
 		panic(accountsErr.Error())
 	}
